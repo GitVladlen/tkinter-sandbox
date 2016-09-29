@@ -1,6 +1,8 @@
 from Tkinter import *
+from math import *
 
 def main():
+
     master = Tk()
 
     ent_str = StringVar()
@@ -43,6 +45,39 @@ def main():
     mainloop()
     pass
 
+def main_graph():
+
+    f = raw_input('f(x):')
+
+    root = Tk()
+
+    canv = Canvas(root, width = 1000, height = 1000, bg = "white")
+    canv.create_line(500,1000,500,0,width=2,arrow=LAST)
+    canv.create_line(0,500,1000,500,width=2,arrow=LAST)
+
+    First_x = -15;
+
+    for i in range(1, 31):
+        try:
+            prev_x = First_x + (i - 1)
+            cur_x = First_x + i
+            prev_f = f.replace('x', str(prev_x))
+            cur_f = f.replace('x', str(cur_x))
+            prev_y = -eval(prev_f) + 500
+            cur_y = -eval(cur_f) + 500
+
+            prev_x += 500
+            cur_x += 500
+
+            canv.create_line(prev_x, prev_y, cur_x, cur_y, width=1)
+        except:
+            pass
+
+    canv.pack()
+    root.mainloop()
+    pass
+
 if __name__ == "__main__":
-    main()
+    # main()
+    main_graph()
     pass
