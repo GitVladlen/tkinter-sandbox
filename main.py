@@ -1,9 +1,16 @@
 from Tkinter import *
 from math import *
 
-def main():
+from Graph import Graph
 
-    master = Tk()
+
+
+def test_interface(master=None):
+
+    if master is None:
+        print "Master is None"
+        return
+        pass
 
     ent_str = StringVar()
 
@@ -41,43 +48,67 @@ def main():
 
     scrollbar.pack(side=RIGHT, fill=Y)
     scrollbar.config(command=text.yview)
-
-    mainloop()
     pass
 
-def main_graph():
+def test_graph_plotting(root):
 
-    f = raw_input('f(x):')
+    root.title('Simple Plot - Version 3 - Smoothed')
 
+    try:
+        canvas = Canvas(root, width=450, height=300, bg = 'white')
+        canvas.pack()
+        Button(root, text='Quit', command=root.quit).pack()
+
+        canvas.create_line(100,250,400,250, width=2)
+        canvas.create_line(100,250,100,50,  width=2)
+
+        for i in range(11):
+            x = 100 + (i * 30)
+            canvas.create_line(x,250,x,245, width=2)
+            canvas.create_text(x,254, text='%d'% (10*i), anchor=N)
+
+        for i in range(6):
+            y = 250 - (i + 40)
+            canvas.create_line(100,y,105,y, width=2)
+            canvas.create_text(96,y, text='%5.1f'% (50.*i), anchor=E)
+
+        scaled = []
+        for x, y in [(12, 56), (20, 94), (33, 98), (45, 120), (61, 180),
+                    (75, 160), (98, 223)]:
+            scaled.append( (100 + 3*x, 250 - (4*y)/5) )
+
+        canvas.create_line(scaled, fill='black', smooth=1)
+
+        for xs, ys in scaled:
+            canvas.create_oval(xs-6,ys-6,xs+6,ys+6, width=1,
+                               outline='black', fill='SkyBlue2')
+    except Exception as exception:
+        print "Exception {}: {}".format(type(exception), exception)
+
+    pass
+
+def test_graph_class(root):
+
+    graph = Graph(root, width=500, height=500)
+    graph.addAxes(10, 100, 10, 100)
+    
+    graph.addLine(20, 20, 50, 60)
+
+    graph.scaleAndCenter()
+
+    graph.pack()
+    pass
+
+def main():
     root = Tk()
 
-    canv = Canvas(root, width = 1000, height = 1000, bg = "white")
-    canv.create_line(500,1000,500,0,width=2,arrow=LAST)
-    canv.create_line(0,500,1000,500,width=2,arrow=LAST)
+    # test_interface(root)
+    # test_graph_plotting(root)
+    test_graph_class(root)
 
-    First_x = -15;
-
-    for i in range(1, 31):
-        try:
-            prev_x = First_x + (i - 1)
-            cur_x = First_x + i
-            prev_f = f.replace('x', str(prev_x))
-            cur_f = f.replace('x', str(cur_x))
-            prev_y = -eval(prev_f) + 500
-            cur_y = -eval(cur_f) + 500
-
-            prev_x += 500
-            cur_x += 500
-
-            canv.create_line(prev_x, prev_y, cur_x, cur_y, width=1)
-        except:
-            pass
-
-    canv.pack()
     root.mainloop()
     pass
 
 if __name__ == "__main__":
-    # main()
-    main_graph()
+    main()
     pass
